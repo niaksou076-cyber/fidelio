@@ -7,37 +7,42 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: #0D0D0D;
-  font-family: 'DM Sans', sans-serif;
-  color: #F5F0E8;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 48px;
-  color: #C9A84C;
-  letter-spacing: 4px;
-  text-align: center;
-}
-.sub {
-  font-size: 12px;
-  color: #888;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  text-align: center;
-  margin-top: 8px;
-}
-</style>
-</head>
-<body>
-<div>
-  <div class="logo">Fidelio</div>
-  <div class="sub">Chargement...</div>
-</div>
-</body>
-</html>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#C9A84C;--dark:#0D0D0D;--dark2:#161616;--dark3:#1E1E1E;--white:#F5F0E8;--gray:#888;--green:#5aba5a;--red:#e05a5a}
+body{background:var(--dark);font-family:'DM Sans',sans-serif;color:var(--white);min-height:100vh}
+.page{display:none;min-height:100vh;padding-bottom:80px}
+.page.active{display:block}
+#loading{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:16px}
+.loader-logo{font-family:'Playfair Display',serif;font-size:36px;color:var(--gold);letter-spacing:4px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--dark2);border-top:1px solid #2a2a2a;display:none;align-items:center;justify-content:space-around;z-index:100}
+.bottom-nav.visible{display:flex}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 16px;opacity:0.4;transition:opacity 0.2s}
+.nav-btn.active{opacity:1}
+.nav-btn .icon{font-size:20px}
+.nav-btn .label{font-size:9px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;font-family:'DM Sans',sans-serif}
+#page-auth{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;min-height:100vh}
+.auth-logo{font-family:'Playfair Display',serif;font-size:48px;color:var(--gold);letter-spacing:4px;margin-bottom:8px}
+.auth-tagline{font-size:11px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-bottom:48px}
+.auth-tabs{display:flex;background:var(--dark3);border-radius:12px;padding:4px;margin-bottom:32px;width:100%;max-width:340px}
+.auth-tab{flex:1;padding:10px;background:none;border:none;color:var(--gray);font-size:13px;cursor:pointer;border-radius:8px;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.auth-tab.active{background:var(--gold);color:var(--dark);font-weight:600}
+.auth-form{width:100%;max-width:340px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px}
+.form-input{width:100%;padding:14px 16px;background:var(--dark3);border:1px solid #2a2a2a;border-radius:12px;color:var(--white);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--gold)}
+.form-select{width:100%;padding:14px 16px;background:var(--dark3);border:1px solid #2a2a2a;border-radius:12px;color:var(--white);font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
+.btn-primary{width:100%;padding:16px;background:var(--gold);color:var(--dark);border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.msg{padding:12px;border-radius:10px;font-size:12px;margin-top:12px;text-align:center}
+.msg.success{background:#1a2a1a;color:var(--green);border:1px solid #2a4a2a}
+.msg.error{background:#2a1a1a;color:var(--red);border:1px solid #4a2a2a}
+.page-header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-logo{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold);letter-spacing:3px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px;margin-bottom:20px}
+.stat-card{background:var(--dark3);border-radius:16px;padding:16px;border:1px solid #2a2a2a}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);line-height:1}
+.stat-label{font-size:9px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.section{padding:0 20px;margin-bottom:20px}
+.section-title{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.client-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--dark3);border-radius:14px;margin-bottom:8px;border:1px solid #2a2a2a}
+.avatar{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),#8​​​​​​​​​​​​​​​​
