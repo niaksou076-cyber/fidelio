@@ -10,15 +10,12 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--gold:#C9A84C;--dark:#0D0D0D;--dark2:#161616;--dark3:#1E1E1E;--white:#F5F0E8;--gray:#888;--green:#5aba5a;--red:#e05a5a}
 body{background:var(--dark);font-family:'DM Sans',sans-serif;color:var(--white);min-height:100vh}
-.page{display:none;min-height:100vh;padding-bottom:80px}
-.page.active{display:block}
+.page{display:none;min-height:100vh;padding-bottom:80px}.page.active{display:block}
 #loading{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:16px}
 .loader-logo{font-family:'Playfair Display',serif;font-size:36px;color:var(--gold);letter-spacing:4px}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--dark2);border-top:1px solid #2a2a2a;display:none;align-items:center;justify-content:space-around;z-index:100}
-.bottom-nav.visible{display:flex}
 .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 16px;opacity:0.4;transition:opacity 0.2s}
-.nav-btn.active{opacity:1}
-.nav-btn .icon{font-size:20px}
+.nav-btn.active{opacity:1}.nav-btn .icon{font-size:20px}
 .nav-btn .label{font-size:9px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;font-family:'DM Sans',sans-serif}
 #page-auth{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;min-height:100vh}
 .auth-logo{font-family:'Playfair Display',serif;font-size:48px;color:var(--gold);letter-spacing:4px;margin-bottom:8px}
@@ -45,16 +42,14 @@ body{background:var(--dark);font-family:'DM Sans',sans-serif;color:var(--white);
 .section-title{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
 .client-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--dark3);border-radius:14px;margin-bottom:8px;border:1px solid #2a2a2a}
 .avatar{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),#8B6914);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--dark);flex-shrink:0}
-.client-info{flex:1}
-.client-name{font-size:13px;font-weight:600;color:var(--white)}
+.client-info{flex:1}.client-name{font-size:13px;font-weight:600;color:var(--white)}
 .client-email{font-size:10px;color:var(--gray);margin-top:1px}
 .client-pts{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold)}
 .loyalty-card{margin:0 20px 20px;background:linear-gradient(135deg,#C9A84C,#8B6914);border-radius:24px;padding:24px;position:relative;overflow:hidden}
 .card-user{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin:4px 0 16px}
 .card-pts-num{font-family:'Playfair Display',serif;font-size:48px;color:#fff;line-height:1}
 .notif-item{background:var(--dark3);border-radius:14px;padding:14px;margin-bottom:8px;border-left:3px solid var(--gold)}
-.notif-msg{font-size:13px;color:var(--white)}
-.notif-time{font-size:9px;color:var(--gray);margin-top:4px}
+.notif-msg{font-size:13px;color:var(--white)}.notif-time{font-size:9px;color:var(--gray);margin-top:4px}
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray);font-size:13px}
 .notif-form{background:var(--dark3);border-radius:16px;padding:16px;border:1px solid #2a2a2a}
 .notif-form textarea{width:100%;background:var(--dark2);border:1px solid #333;border-radius:10px;color:var(--white);padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;resize:none;outline:none;margin-bottom:12px}
@@ -65,254 +60,212 @@ body{background:var(--dark);font-family:'DM Sans',sans-serif;color:var(--white);
 </style>
 </head>
 <body>
-<div id="loading">
-  <div class="loader-logo">Fidelio</div>
-  <div style="font-size:11px;color:#888;letter-spacing:2px;">CHARGEMENT...</div>
-</div>
+<div id="loading"><div class="loader-logo">Fidelio</div><div style="font-size:11px;color:#888;letter-spacing:2px;">CHARGEMENT...</div></div>
 <nav class="bottom-nav" id="nav-commercant">
-  <button class="nav-btn active" onclick="showTab('dashboard')"><span class="icon">📊</span><span class="label">Dashboard</span></button>
-  <button class="nav-btn" onclick="showTab('clients')"><span class="icon">👥</span><span class="label">Clients</span></button>
-  <button class="nav-btn" onclick="showTab('notifications')"><span class="icon">📣</span><span class="label">Notifs</span></button>
-  <button class="nav-btn" onclick="showTab('profil-c')"><span class="icon">⚙️</span><span class="label">Profil</span></button>
+<button class="nav-btn active" onclick="showTab('dashboard')"><span class="icon">📊</span><span class="label">Dashboard</span></button>
+<button class="nav-btn" onclick="showTab('clients')"><span class="icon">👥</span><span class="label">Clients</span></button>
+<button class="nav-btn" onclick="showTab('notifications')"><span class="icon">📣</span><span class="label">Notifs</span></button>
+<button class="nav-btn" onclick="showTab('profil-c')"><span class="icon">⚙️</span><span class="label">Profil</span></button>
 </nav>
 <nav class="bottom-nav" id="nav-client">
-  <button class="nav-btn active" onclick="showTab('accueil-client')"><span class="icon">🏠</span><span class="label">Accueil</span></button>
-  <button class="nav-btn" onclick="showTab('qrcode')"><span class="icon">📱</span><span class="label">QR Code</span></button>
-  <button class="nav-btn" onclick="showTab('mes-notifs')"><span class="icon">🔔</span><span class="label">Notifs</span></button>
-  <button class="nav-btn" onclick="showTab('profil-client')"><span class="icon">👤</span><span class="label">Profil</span></button>
+<button class="nav-btn active" onclick="showTab('accueil-client')"><span class="icon">🏠</span><span class="label">Accueil</span></button>
+<button class="nav-btn" onclick="showTab('qrcode')"><span class="icon">📱</span><span class="label">QR Code</span></button>
+<button class="nav-btn" onclick="showTab('mes-notifs')"><span class="icon">🔔</span><span class="label">Notifs</span></button>
+<button class="nav-btn" onclick="showTab('profil-client')"><span class="icon">👤</span><span class="label">Profil</span></button>
 </nav>
 <div id="page-auth" class="page active">
-  <div class="auth-logo">Fidelio</div>
-  <div class="auth-tagline">Votre fidélité récompensée</div>
-  <div class="auth-tabs">
-    <button class="auth-tab active" onclick="switchAuthTab('login')">Connexion</button>
-    <button class="auth-tab" onclick="switchAuthTab('register')">Inscription</button>
-  </div>
-  <div id="auth-login" class="auth-form">
-    <div class="form-group"><label class="form-label">Email</label><input type="email" id="login-email" class="form-input" placeholder="votre@email.com"></div>
-    <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="login-password" class="form-input" placeholder="••••••••"></div>
-    <button class="btn-primary" onclick="login()">Se connecter</button>
-    <div id="login-msg"></div>
-  </div>
-  <div id="auth-register" class="auth-form" style="display:none;">
-    <div class="form-group"><label class="form-label">Je suis</label><select id="register-role" class="form-select" onchange="toggleRestoField()"><option value="client">👤 Un client</option><option value="commercant">🏪 Un commerçant</option></select></div>
-    <div class="form-group"><label class="form-label">Prénom & Nom</label><input type="text" id="register-name" class="form-input" placeholder="Sophie Martin"></div>
-    <div id="register-extra" style="display:none;"><div class="form-group"><label class="form-label">Nom établissement</label><input type="text" id="register-resto" class="form-input" placeholder="La Bella Napoli"></div></div>
-    <div class="form-group"><label class="form-label">Email</label><input type="email" id="register-email" class="form-input" placeholder="votre@email.com"></div>
-    <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="register-password" class="form-input" placeholder="••••••••"></div>
-    <button class="btn-primary" onclick="register()">Créer mon compte</button>
-    <div id="register-msg"></div>
-  </div>
+<div class="auth-logo">Fidelio</div>
+<div class="auth-tagline">Votre fidélité récompensée</div>
+<div class="auth-tabs">
+<button class="auth-tab active" onclick="switchAuthTab('login')">Connexion</button>
+<button class="auth-tab" onclick="switchAuthTab('register')">Inscription</button>
+</div>
+<div id="auth-login" class="auth-form">
+<div class="form-group"><label class="form-label">Email</label><input type="email" id="login-email" class="form-input" placeholder="votre@email.com"></div>
+<div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="login-password" class="form-input" placeholder="••••••••"></div>
+<button class="btn-primary" onclick="login()">Se connecter</button>
+<div id="login-msg"></div>
+</div>
+<div id="auth-register" class="auth-form" style="display:none;">
+<div class="form-group"><label class="form-label">Je suis</label><select id="register-role" class="form-select" onchange="toggleRestoField()"><option value="client">👤 Un client</option><option value="commercant">🏪 Un commerçant</option></select></div>
+<div class="form-group"><label class="form-label">Prénom & Nom</label><input type="text" id="register-name" class="form-input" placeholder="Sophie Martin"></div>
+<div id="register-extra" style="display:none;"><div class="form-group"><label class="form-label">Nom établissement</label><input type="text" id="register-resto" class="form-input" placeholder="La Bella Napoli"></div></div>
+<div class="form-group"><label class="form-label">Email</label><input type="email" id="register-email" class="form-input" placeholder="votre@email.com"></div>
+<div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="register-password" class="form-input" placeholder="••••••••"></div>
+<button class="btn-primary" onclick="register()">Créer mon compte</button>
+<div id="register-msg"></div>
+</div>
 </div>
 <div id="page-dashboard" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div><div style="font-size:10px;padding:4px 12px;border-radius:20px;background:#1a2a1a;color:#5aba5a;border:1px solid #2a4a2a;">● EN LIGNE</div></div>
-  <div class="section"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;">Bonjour,</div><div style="font-family:'Playfair Display',serif;font-size:22px;" id="dash-resto-name">Mon établissement</div></div>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-num" id="stat-clients">0</div><div class="stat-label">Clients fidèles</div></div>
-    <div class="stat-card"><div class="stat-num" id="stat-notifs">0</div><div class="stat-label">Notifs envoyées</div></div>
-    <div class="stat-card"><div class="stat-num" id="stat-pts">0</div><div class="stat-label">Points distribués</div></div>
-    <div class="stat-card"><div class="stat-num">🏪</div><div class="stat-label">Actif</div></div>
-  </div>
-  <div class="section"><div class="section-title">Action rapide</div><button class="btn-primary" onclick="showTab('notifications')">📣 Envoyer une notification</button></div>
-  <div class="section"><div class="section-title">Derniers clients</div><div id="dash-clients-list"><div class="empty-state">Aucun client encore</div></div></div>
+<div class="page-header"><div class="page-logo">Fidelio</div><div style="font-size:10px;padding:4px 12px;border-radius:20px;background:#1a2a1a;color:#5aba5a;border:1px solid #2a4a2a;">● EN LIGNE</div></div>
+<div class="section"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;">Bonjour,</div><div style="font-family:'Playfair Display',serif;font-size:22px;" id="dash-resto-name">Mon établissement</div></div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-num" id="stat-clients">0</div><div class="stat-label">Clients fidèles</div></div>
+<div class="stat-card"><div class="stat-num" id="stat-notifs">0</div><div class="stat-label">Notifs envoyées</div></div>
+<div class="stat-card"><div class="stat-num" id="stat-pts">0</div><div class="stat-label">Points distribués</div></div>
+<div class="stat-card"><div class="stat-num">🏪</div><div class="stat-label">Actif</div></div>
+</div>
+<div class="section"><div class="section-title">Action rapide</div><button class="btn-primary" onclick="showTab('notifications')">📣 Envoyer une notification</button></div>
+<div class="section"><div class="section-title">Derniers clients</div><div id="dash-clients-list"><div class="empty-state">Aucun client encore</div></div></div>
 </div>
 <div id="page-clients" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="section"><div class="section-title">Mes clients fidèles</div><div id="clients-list"><div class="empty-state">Aucun client encore</div></div></div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="section"><div class="section-title">Mes clients fidèles</div><div id="clients-list"><div class="empty-state">Aucun client encore</div></div></div>
 </div>
 <div id="page-notifications" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="section"><div class="section-title">Envoyer une notification</div>
-    <div class="notif-form">
-      <textarea id="notif-text" rows="4" placeholder="Ex: 🍕 -20% ce soir !"></textarea>
-      <button class="btn-primary" onclick="sendNotification()">📣 Envoyer</button>
-      <div id="notif-send-msg"></div>
-    </div>
-  </div>
-  <div class="section"><div class="section-title">Historique</div><div id="notifs-history"><div class="empty-state">Aucune notification</div></div></div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="section"><div class="section-title">Envoyer une notification</div>
+<div class="notif-form"><textarea id="notif-text" rows="4" placeholder="Ex: 🍕 -20% ce soir !"></textarea>
+<button class="btn-primary" onclick="sendNotification()">📣 Envoyer</button>
+<div id="notif-send-msg"></div></div></div>
+<div class="section"><div class="section-title">Historique</div><div id="notifs-history"><div class="empty-state">Aucune notification</div></div></div>
 </div>
 <div id="page-profil-c" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="profile-section">
-    <div style="width:60px;height:60px;background:linear-gradient(135deg,var(--gold),#8B6914);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px;">🏪</div>
-    <div class="profile-name" id="profil-c-name">Mon établissement</div>
-    <div class="profile-email" id="profil-c-email"></div>
-    <button class="logout-btn" onclick="logout()">🚪 Se déconnecter</button>
-  </div>
-</div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="profile-section">
+<div style="width:60px;height:60px;background:linear-gradient(135deg,var(--gold),#8B6914);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px;">🏪</div>
+<div class="profile-name" id="profil-c-name">Mon établissement</div>
+<div class="profile-email" id="profil-c-email"></div>
+<button class="logout-btn" onclick="logout()">🚪 Se déconnecter</button>
+</div></div>
 <div id="page-accueil-client" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="loyalty-card">
-    <div style="font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;">Carte de fidélité</div>
-    <div class="card-user" id="client-card-name">Votre nom</div>
-    <div style="display:flex;align-items:flex-end;gap:6px;"><div class="card-pts-num" id="client-card-pts">0</div><div style="font-size:12px;color:rgba(255,255,255,0.8);margin-bottom:8px;">&nbsp;points</div></div>
-  </div>
-  <div class="section"><div class="section-title">Mes établissements</div><div id="client-restos-list"><div class="empty-state">Scannez un QR code pour commencer</div></div></div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="loyalty-card">
+<div style="font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;">Carte de fidélité</div>
+<div class="card-user" id="client-card-name">Votre nom</div>
+<div style="display:flex;align-items:flex-end;gap:6px;"><div class="card-pts-num" id="client-card-pts">0</div><div style="font-size:12px;color:rgba(255,255,255,0.8);margin-bottom:8px;">&nbsp;points</div></div>
+</div>
+<div class="section"><div class="section-title">Mes établissements</div><div id="client-restos-list"><div class="empty-state">Scannez un QR code pour commencer</div></div></div>
 </div>
 <div id="page-qrcode" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="section" style="text-align:center;">
-    <div class="section-title">Mon QR Code</div>
-    <div style="background:var(--white);border-radius:20px;padding:24px;margin-top:12px;">
-      <div id="qr-grid" style="display:grid;grid-template-columns:repeat(9,1fr);gap:3px;width:150px;margin:0 auto 12px;"></div>
-      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--dark);font-weight:700;" id="qr-client-name">Votre nom</div>
-    </div>
-  </div>
-  <div class="section"><div class="stat-card" style="text-align:center;"><div class="stat-num" id="qr-pts">0</div><div class="stat-label">Points totaux</div></div></div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="section" style="text-align:center;"><div class="section-title">Mon QR Code</div>
+<div style="background:var(--white);border-radius:20px;padding:24px;margin-top:12px;">
+<div id="qr-grid" style="display:grid;grid-template-columns:repeat(9,1fr);gap:3px;width:150px;margin:0 auto 12px;"></div>
+<div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--dark);font-weight:700;" id="qr-client-name">Votre nom</div>
+</div></div>
+<div class="section"><div class="stat-card" style="text-align:center;"><div class="stat-num" id="qr-pts">0</div><div class="stat-label">Points totaux</div></div></div>
 </div>
 <div id="page-mes-notifs" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="section"><div class="section-title">Mes notifications</div><div id="client-notifs-list"><div class="empty-state">Aucune notification</div></div></div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="section"><div class="section-title">Mes notifications</div><div id="client-notifs-list"><div class="empty-state">Aucune notification</div></div></div>
 </div>
 <div id="page-profil-client" class="page">
-  <div class="page-header"><div class="page-logo">Fidelio</div></div>
-  <div class="profile-section">
-    <div style="width:60px;height:60px;background:linear-gradient(135deg,var(--gold),#8B6914);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px;">👤</div>
-    <div class="profile-name" id="profil-client-name">Votre nom</div>
-    <div class="profile-email" id="profil-client-email"></div>
-    <button class="logout-btn" onclick="logout()">🚪 Se déconnecter</button>
-  </div>
-</div>
+<div class="page-header"><div class="page-logo">Fidelio</div></div>
+<div class="profile-section">
+<div style="width:60px;height:60px;background:linear-gradient(135deg,var(--gold),#8B6914);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px;">👤</div>
+<div class="profile-name" id="profil-client-name">Votre nom</div>
+<div class="profile-email" id="profil-client-email"></div>
+<button class="logout-btn" onclick="logout()">🚪 Se déconnecter</button>
+</div></div>
 <script>
 const SUPABASE_URL='https://uutmlesvkuttzuqbzlrv.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1dG1sZXN2a3V0dHp1cWJ6bHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MTE3MzEsImV4cCI6MjA1OTA4NzczMX0.FSJ7sXZsyOmgL4NbPUb-XOVFazQBN8bGUKW_14R5E';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1dG1sZXN2a3V0bHp1cWJ6bHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1OTkyNTAsImV4cCI6MjA5MTE3NTI1MH0.e-FSJ7sXZ5yOmgL4NbPUb-XOVFszQBN8bGUKW_14R5E';
 const{createClient}=supabase;
 const db=createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,currentRole=null,currentProfile=null;
 window.onload=async()=>{
-  setTimeout(async()=>{
-    document.getElementById('loading').style.display='none';
-    const{data:{session}}=await db.auth.getSession();
-    if(session){currentUser=session.user;await loadUserProfile();}
-  },1500);
-};
+setTimeout(async()=>{
+document.getElementById('loading').style.display='none';
+try{const{data:{session}}=await db.auth.getSession();
+if(session){currentUser=session.user;await loadUserProfile();}}catch(e){console.log(e);}
+},1500);};
 function switchAuthTab(tab){
-  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
-  document.getElementById('auth-login').style.display=tab==='login'?'block':'none';
-  document.getElementById('auth-register').style.display=tab==='register'?'block':'none';
-}
-function toggleRestoField(){
-  document.getElementById('register-extra').style.display=document.getElementById('register-role').value==='commercant'?'block':'none';
-}
+document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
+document.getElementById('auth-login').style.display=tab==='login'?'block':'none';
+document.getElementById('auth-register').style.display=tab==='register'?'block':'none';}
+function toggleRestoField(){document.getElementById('register-extra').style.display=document.getElementById('register-role').value==='commercant'?'block':'none';}
 async function login(){
-  const email=document.getElementById('login-email').value;
-  const password=document.getElementById('login-password').value;
-  const msg=document.getElementById('login-msg');
-  if(!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
-  const{data,error}=await db.auth.signInWithPassword({email,password});
-  if(error){showMsg(msg,'Email ou mot de passe incorrect','error');return;}
-  currentUser=data.user;await loadUserProfile();
-}
+const email=document.getElementById('login-email').value;
+const password=document.getElementById('login-password').value;
+const msg=document.getElementById('login-msg');
+if(!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
+try{const{data,error}=await db.auth.signInWithPassword({email,password});
+if(error){showMsg(msg,'Email ou mot de passe incorrect','error');return;}
+currentUser=data.user;await loadUserProfile();}
+catch(e){showMsg(msg,'Erreur: '+e.message,'error');}}
 async function register(){
-  const role=document.getElementById('register-role').value;
-  const name=document.getElementById('register-name').value;
-  const email=document.getElementById('register-email').value;
-  const password=document.getElementById('register-password').value;
-  const msg=document.getElementById('register-msg');
-  if(!name||!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
-  const{data,error}=await db.auth.signUp({email,password});
-  if(error){showMsg(msg,error.message,'error');return;}
-  currentUser=data.user;
-  if(role==='commercant'){
-    const restoName=document.getElementById('register-resto').value||name;
-    await db.from('commercants').insert({id:currentUser.id,email,nom:restoName,notifications_envoyees:0});
-  }else{
-    await db.from('clients').insert({id:currentUser.id,email,nom:name,points_total:0});
-  }
-  await loadUserProfile();
-}
+const role=document.getElementById('register-role').value;
+const name=document.getElementById('register-name').value;
+const email=document.getElementById('register-email').value;
+const password=document.getElementById('register-password').value;
+const msg=document.getElementById('register-msg');
+if(!name||!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
+try{const{data,error}=await db.auth.signUp({email,password,options:{data:{name,role}}});
+if(error){showMsg(msg,'Erreur: '+error.message,'error');return;}
+if(!data.user){showMsg(msg,'Vérifie ton email pour confirmer','success');return;}
+currentUser=data.user;
+if(role==='commercant'){const restoName=document.getElementById('register-resto').value||name;
+await db.from('commercants').insert({id:currentUser.id,email,nom:restoName,notifications_envoyees:0});}
+else{await db.from('clients').insert({id:currentUser.id,email,nom:name,points_total:0});}
+await loadUserProfile();}
+catch(e){showMsg(msg,'Erreur: '+e.message,'error');}}
 async function loadUserProfile(){
-  const{data:commercant}=await db.from('commercants').select('*').eq('id',currentUser.id).single();
-  if(commercant){currentRole='commercant';currentProfile=commercant;showCommerçantDashboard();return;}
-  const{data:client}=await db.from('clients').select('*').eq('id',currentUser.id).single();
-  if(client){currentRole='client';currentProfile=client;showClientDashboard();}
-}
-async function logout(){
-  await db.auth.signOut();currentUser=null;currentRole=null;currentProfile=null;
-  showPage('page-auth');
-  document.getElementById('nav-commercant').style.display='none';
-  document.getElementById('nav-client').style.display='none';
-}
+try{const{data:commercant}=await db.from('commercants').select('*').eq('id',currentUser.id).single();
+if(commercant){currentRole='commercant';currentProfile=commercant;showCommerçantDashboard();return;}
+const{data:client}=await db.from('clients').select('*').eq('id',currentUser.id).single();
+if(client){currentRole='client';currentProfile=client;showClientDashboard();}}
+catch(e){console.log(e);}}
+async function logout(){await db.auth.signOut();currentUser=null;currentRole=null;currentProfile=null;
+showPage('page-auth');document.getElementById('nav-commercant').style.display='none';document.getElementById('nav-client').style.display='none';}
 async function showCommerçantDashboard(){
-  showPage('page-dashboard');
-  document.getElementById('nav-commercant').style.display='flex';
-  document.getElementById('dash-resto-name').textContent=currentProfile.nom;
-  document.getElementById('profil-c-name').textContent=currentProfile.nom;
-  document.getElementById('profil-c-email').textContent=currentProfile.email;
-  await loadStats();
-}
+showPage('page-dashboard');document.getElementById('nav-commercant').style.display='flex';
+document.getElementById('dash-resto-name').textContent=currentProfile.nom;
+document.getElementById('profil-c-name').textContent=currentProfile.nom;
+document.getElementById('profil-c-email').textContent=currentProfile.email;
+await loadStats();}
 async function loadStats(){
-  const{data:points}=await db.from('points').select('*').eq('commercant_id',currentUser.id);
-  if(points){
-    const unique=[...new Set(points.map(p=>p.client_id))];
-    document.getElementById('stat-clients').textContent=unique.length;
-    document.getElementById('stat-pts').textContent=points.reduce((s,p)=>s+(p.points||0),0);
-    if(unique.length>0){
-      const{data:clients}=await db.from('clients').select('*').in('id',unique);
-      if(clients){
-        const html=clients.slice(0,5).map(c=>{
-          const pts=points.filter(p=>p.client_id===c.id).reduce((s,p)=>s+p.points,0);
-          const ini=c.nom.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-          return`<div class="client-item"><div class="avatar">${ini}</div><div class="client-info"><div class="client-name">${c.nom}</div><div class="client-email">${c.email}</div></div><div class="client-pts">${pts}pts</div></div>`;
-        }).join('');
-        document.getElementById('dash-clients-list').innerHTML=html;
-        document.getElementById('clients-list').innerHTML=html;
-      }
-    }
-  }
-  const{data:notifs}=await db.from('notifications').select('*').eq('commercant_id',currentUser.id);
-  document.getElementById('stat-notifs').textContent=notifs?notifs.length:0;
-  if(notifs&&notifs.length>0){
-    document.getElementById('notifs-history').innerHTML=notifs.reverse().map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">📣 ${currentProfile.nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');
-  }
-}
+try{const{data:points}=await db.from('points').select('*').eq('commercant_id',currentUser.id);
+if(points){const unique=[...new Set(points.map(p=>p.client_id))];
+document.getElementById('stat-clients').textContent=unique.length;
+document.getElementById('stat-pts').textContent=points.reduce((s,p)=>s+(p.points||0),0);
+if(unique.length>0){const{data:clients}=await db.from('clients').select('*').in('id',unique);
+if(clients){const html=clients.slice(0,5).map(c=>{
+const pts=points.filter(p=>p.client_id===c.id).reduce((s,p)=>s+p.points,0);
+const ini=c.nom.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+return`<div class="client-item"><div class="avatar">${ini}</div><div class="client-info"><div class="client-name">${c.nom}</div><div class="client-email">${c.email}</div></div><div class="client-pts">${pts}pts</div></div>`;}).join('');
+document.getElementById('dash-clients-list').innerHTML=html;
+document.getElementById('clients-list').innerHTML=html;}}}
+const{data:notifs}=await db.from('notifications').select('*').eq('commercant_id',currentUser.id);
+document.getElementById('stat-notifs').textContent=notifs?notifs.length:0;
+if(notifs&&notifs.length>0){document.getElementById('notifs-history').innerHTML=notifs.reverse().map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">📣 ${currentProfile.nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');}}
+catch(e){console.log(e);}}
 async function sendNotification(){
-  const text=document.getElementById('notif-text').value;
-  const msg=document.getElementById('notif-send-msg');
-  if(!text){showMsg(msg,'Écris un message','error');return;}
-  await db.from('notifications').insert({commercant_id:currentUser.id,commercant_nom:currentProfile.nom,message:text});
-  document.getElementById('notif-text').value='';
-  showMsg(msg,'✅ Notification envoyée !','success');
-  await loadStats();
-}
+const text=document.getElementById('notif-text').value;
+const msg=document.getElementById('notif-send-msg');
+if(!text){showMsg(msg,'Écris un message','error');return;}
+await db.from('notifications').insert({commercant_id:currentUser.id,commercant_nom:currentProfile.nom,message:text});
+document.getElementById('notif-text').value='';
+showMsg(msg,'✅ Notification envoyée !','success');await loadStats();}
 async function showClientDashboard(){
-  showPage('page-accueil-client');
-  document.getElementById('nav-client').style.display='flex';
-  document.getElementById('client-card-name').textContent=currentProfile.nom;
-  document.getElementById('qr-client-name').textContent=currentProfile.nom;
-  document.getElementById('profil-client-name').textContent=currentProfile.nom;
-  document.getElementById('profil-client-email').textContent=currentProfile.email;
-  generateQR();
-  const{data:points}=await db.from('points').select('*').eq('client_id',currentUser.id);
-  const total=points?points.reduce((s,p)=>s+p.points,0):0;
-  document.getElementById('client-card-pts').textContent=total;
-  document.getElementById('qr-pts').textContent=total;
-  const{data:notifs}=await db.from('notifications').select('*').order('created_at',{ascending:false}).limit(20);
-  if(notifs&&notifs.length>0){
-    document.getElementById('client-notifs-list').innerHTML=notifs.map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">🏪 ${n.commercant_nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');
-  }
-}
-function generateQR(){
-  const grid=document.getElementById('qr-grid');
-  if(!grid)return;grid.innerHTML='';
-  const seed=currentUser?currentUser.id.charCodeAt(0):42;
-  for(let i=0;i<81;i++){
-    const cell=document.createElement('div');
-    cell.style.cssText=`aspect-ratio:1;border-radius:1px;background:${((seed*(i+1)*7)%3)>0?'#0D0D0D':'#F5F0E8'}`;
-    grid.appendChild(cell);
-  }
-}
+showPage('page-accueil-client');document.getElementById('nav-client').style.display='flex';
+document.getElementById('client-card-name').textContent=currentProfile.nom;
+document.getElementById('qr-client-name').textContent=currentProfile.nom;
+document.getElementById('profil-client-name').textContent=currentProfile.nom;
+document.getElementById('profil-client-email').textContent=currentProfile.email;
+generateQR();
+try{const{data:points}=await db.from('points').select('*').eq('client_id',currentUser.id);
+const total=points?points.reduce((s,p)=>s+p.points,0):0;
+document.getElementById('client-card-pts').textContent=total;
+document.getElementById('qr-pts').textContent=total;
+const{data:notifs}=await db.from('notifications').select('*').order('created_at',{ascending:false}).limit(20);
+if(notifs&&notifs.length>0){document.getElementById('client-notifs-list').innerHTML=notifs.map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">🏪 ${n.commercant_nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');}}
+catch(e){console.log(e);}}
+function generateQR(){const grid=document.getElementById('qr-grid');if(!grid)return;grid.innerHTML='';
+const seed=currentUser?currentUser.id.charCodeAt(0):42;
+for(let i=0;i<81;i++){const cell=document.createElement('div');
+cell.style.cssText=`aspect-ratio:1;border-radius:1px;background:${((seed*(i+1)*7)%3)>0?'#0D0D0D':'#F5F0E8'}`;
+grid.appendChild(cell);}}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function showTab(tab){
-  const map={dashboard:'page-dashboard',clients:'page-clients',notifications:'page-notifications','profil-c':'page-profil-c','accueil-client':'page-accueil-client',qrcode:'page-qrcode','mes-notifs':'page-mes-notifs','profil-client':'page-profil-client'};
-  showPage(map[tab]);
-  const navId=currentRole==='commercant'?'nav-commercant':'nav-client';
-  const tabs=currentRole==='commercant'?['dashboard','clients','notifications','profil-c']:['accueil-client','qrcode','mes-notifs','profil-client'];
-  document.getElementById(navId).querySelectorAll('.nav-btn').forEach((btn,i)=>btn.classList.toggle('active',tabs[i]===tab));
-  if(['dashboard','clients','notifications'].includes(tab))loadStats();
-  if(['accueil-client','mes-notifs'].includes(tab))showClientDashboard();
-}
-function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>el.innerHTML='',4000);}
+const map={dashboard:'page-dashboard',clients:'page-clients',notifications:'page-notifications','profil-c':'page-profil-c','accueil-client':'page-accueil-client',qrcode:'page-qrcode','mes-notifs':'page-mes-notifs','profil-client':'page-profil-client'};
+showPage(map[tab]);
+const navId=currentRole==='commercant'?'nav-commercant':'nav-client';
+const tabs=currentRole==='commercant'?['dashboard','clients','notifications','profil-c']:['accueil-client','qrcode','mes-notifs','profil-client'];
+document.getElementById(navId).querySelectorAll('.nav-btn').forEach((btn,i)=>btn.classList.toggle('active',tabs[i]===tab));
+if(['dashboard','clients','notifications'].includes(tab))loadStats();
+if(['accueil-client','mes-notifs'].includes(tab))showClientDashboard();}
+function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>el.innerHTML='',5000);}
 </script>
 </body>
 </html>
