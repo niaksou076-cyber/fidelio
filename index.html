@@ -164,108 +164,207 @@ const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 const{createClient}=supabase;
 const db=createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,currentRole=null,currentProfile=null;
+
 window.onload=async()=>{
-setTimeout(async()=>{
-document.getElementById('loading').style.display='none';
-try{const{data:{session}}=await db.auth.getSession();
-if(session){currentUser=session.user;await loadUserProfile();}}catch(e){console.log(e);}
-},1500);};
+  setTimeout(async()=>{
+    document.getElementById('loading').style.display='none';
+    try{
+      const{data:{session}}=await db.auth.getSession();
+      console.log('Session:', session);
+      if(session && session.user){
+        currentUser=session.user;
+        console.log('User found:', currentUser.id);
+        await loadUserProfile();
+      } else {
+        console.log('No session found');
+        showPage('page-auth');
+      }
+    }catch(e){
+      console.log('Error:', e);
+      showPage('page-auth');
+    }
+  },1500);
+};
+
+db.auth.onAuthStateChange(async(event, session)=>{
+  console.log('Auth event:', event, session);
+  if(event==='SIGNED_IN' && session){
+    currentUser=session.user;
+    await loadUserProfile();
+  } else if(event==='SIGNED_OUT'){
+    currentUser=null;currentRole=null;currentProfile=null;
+    showPage('page-auth');
+    document.getElementById('nav-commercant').style.display='none';
+    document.getElementById('nav-client').style.display='none';
+  }
+});
+
 function switchAuthTab(tab){
-document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
-document.getElementById('auth-login').style.display=tab==='login'?'block':'none';
-document.getElementById('auth-register').style.display=tab==='register'?'block':'none';}
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
+  document.getElementById('auth-login').style.display=tab==='login'?'block':'none';
+  document.getElementById('auth-register').style.display=tab==='register'?'block':'none';
+}
 function toggleRestoField(){document.getElementById('register-extra').style.display=document.getElementById('register-role').value==='commercant'?'block':'none';}
+
 async function login(){
-const email=document.getElementById('login-email').value;
-const password=document.getElementById('login-password').value;
-const msg=document.getElementById('login-msg');
-if(!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
-try{const{data,error}=await db.auth.signInWithPassword({email,password});
-if(error){showMsg(msg,'Email ou mot de passe incorrect','error');return;}
-currentUser=data.user;await loadUserProfile();}
-catch(e){showMsg(msg,'Erreur: '+e.message,'error');}}
+  const email=document.getElementById('login-email').value;
+  const password=document.getElementById('login-password').value;
+  const msg=document.getElementById('login-msg');
+  if(!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
+  try{
+    const{data,error}=await db.auth.signInWithPassword({email,password});
+    console.log('Login result:', data, error);
+    if(error){showMsg(msg,'Email ou mot de passe incorrect','error');return;}
+    currentUser=data.user;
+    await loadUserProfile();
+  }catch(e){showMsg(msg,'Erreur: '+e.message,'error');}
+}
+
 async function register(){
-const role=document.getElementById('register-role').value;
-const name=document.getElementById('register-name').value;
-const email=document.getElementById('register-email').value;
-const password=document.getElementById('register-password').value;
-const msg=document.getElementById('register-msg');
-if(!name||!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
-try{const{data,error}=await db.auth.signUp({email,password,options:{data:{name,role}}});
-if(error){showMsg(msg,'Erreur: '+error.message,'error');return;}
-if(!data.user){showMsg(msg,'Vérifie ton email pour confirmer','success');return;}
-currentUser=data.user;
-if(role==='commercant'){const restoName=document.getElementById('register-resto').value||name;
-await db.from('commercants').insert({id:currentUser.id,email,nom:restoName,notifications_envoyees:0});}
-else{await db.from('clients').insert({id:currentUser.id,email,nom:name,points_total:0});}
-await loadUserProfile();}
-catch(e){showMsg(msg,'Erreur: '+e.message,'error');}}
+  const role=document.getElementById('register-role').value;
+  const name=document.getElementById('register-name').value;
+  const email=document.getElementById('register-email').value;
+  const password=document.getElementById('register-password').value;
+  const msg=document.getElementById('register-msg');
+  if(!name||!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
+  try{
+    const{data,error}=await db.auth.signUp({email,password});
+    if(error){showMsg(msg,'Erreur: '+error.message,'error');return;}
+    if(!data.user){showMsg(msg,'Vérifie ton email','success');return;}
+    currentUser=data.user;
+    if(role==='commercant'){
+      const restoName=document.getElementById('register-resto').value||name;
+      await db.from('commercants').insert({id:currentUser.id,email,nom:restoName,notifications_envoyees:0});
+    }else{
+      await db.from('clients').insert({id:currentUser.id,email,nom:name,points_total:0});
+    }
+    await loadUserProfile();
+  }catch(e){showMsg(msg,'Erreur: '+e.message,'error');}
+}
+
 async function loadUserProfile(){
-try{const{data:commercant}=await db.from('commercants').select('*').eq('id',currentUser.id).single();
-if(commercant){currentRole='commercant';currentProfile=commercant;showCommerçantDashboard();return;}
-const{data:client}=await db.from('clients').select('*').eq('id',currentUser.id).single();
-if(client){currentRole='client';currentProfile=client;showClientDashboard();}}
-catch(e){console.log(e);}}
-async function logout(){await db.auth.signOut();currentUser=null;currentRole=null;currentProfile=null;
-showPage('page-auth');document.getElementById('nav-commercant').style.display='none';document.getElementById('nav-client').style.display='none';}
+  console.log('Loading profile for:', currentUser.id);
+  try{
+    const{data:commercant,error:e1}=await db.from('commercants').select('*').eq('id',currentUser.id).single();
+    console.log('Commercant:', commercant, e1);
+    if(commercant){currentRole='commercant';currentProfile=commercant;showCommerçantDashboard();return;}
+    const{data:client,error:e2}=await db.from('clients').select('*').eq('id',currentUser.id).single();
+    console.log('Client:', client, e2);
+    if(client){currentRole='client';currentProfile=client;showClientDashboard();}
+    else{
+      showMsg(document.getElementById('login-msg'),'Profil introuvable','error');
+      showPage('page-auth');
+    }
+  }catch(e){console.log('Profile error:',e);}
+}
+
+async function logout(){
+  await db.auth.signOut();
+  currentUser=null;currentRole=null;currentProfile=null;
+  showPage('page-auth');
+  document.getElementById('nav-commercant').style.display='none';
+  document.getElementById('nav-client').style.display='none';
+}
+
 async function showCommerçantDashboard(){
-showPage('page-dashboard');document.getElementById('nav-commercant').style.display='flex';
-document.getElementById('dash-resto-name').textContent=currentProfile.nom;
-document.getElementById('profil-c-name').textContent=currentProfile.nom;
-document.getElementById('profil-c-email').textContent=currentProfile.email;
-await loadStats();}
+  console.log('Showing dashboard for:', currentProfile.nom);
+  showPage('page-dashboard');
+  document.getElementById('nav-commercant').style.display='flex';
+  document.getElementById('dash-resto-name').textContent=currentProfile.nom;
+  document.getElementById('profil-c-name').textContent=currentProfile.nom;
+  document.getElementById('profil-c-email').textContent=currentProfile.email;
+  await loadStats();
+}
+
 async function loadStats(){
-try{const{data:points}=await db.from('points').select('*').eq('commercant_id',currentUser.id);
-if(points){const unique=[...new Set(points.map(p=>p.client_id))];
-document.getElementById('stat-clients').textContent=unique.length;
-document.getElementById('stat-pts').textContent=points.reduce((s,p)=>s+(p.points||0),0);
-if(unique.length>0){const{data:clients}=await db.from('clients').select('*').in('id',unique);
-if(clients){const html=clients.slice(0,5).map(c=>{
-const pts=points.filter(p=>p.client_id===c.id).reduce((s,p)=>s+p.points,0);
-const ini=c.nom.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-return`<div class="client-item"><div class="avatar">${ini}</div><div class="client-info"><div class="client-name">${c.nom}</div><div class="client-email">${c.email}</div></div><div class="client-pts">${pts}pts</div></div>`;}).join('');
-document.getElementById('dash-clients-list').innerHTML=html;
-document.getElementById('clients-list').innerHTML=html;}}}
-const{data:notifs}=await db.from('notifications').select('*').eq('commercant_id',currentUser.id);
-document.getElementById('stat-notifs').textContent=notifs?notifs.length:0;
-if(notifs&&notifs.length>0){document.getElementById('notifs-history').innerHTML=notifs.reverse().map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">📣 ${currentProfile.nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');}}
-catch(e){console.log(e);}}
+  try{
+    const{data:points}=await db.from('points').select('*').eq('commercant_id',currentUser.id);
+    if(points){
+      const unique=[...new Set(points.map(p=>p.client_id))];
+      document.getElementById('stat-clients').textContent=unique.length;
+      document.getElementById('stat-pts').textContent=points.reduce((s,p)=>s+(p.points||0),0);
+      if(unique.length>0){
+        const{data:clients}=await db.from('clients').select('*').in('id',unique);
+        if(clients){
+          const html=clients.slice(0,5).map(c=>{
+            const pts=points.filter(p=>p.client_id===c.id).reduce((s,p)=>s+p.points,0);
+            const ini=c.nom.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+            return`<div class="client-item"><div class="avatar">${ini}</div><div class="client-info"><div class="client-name">${c.nom}</div><div class="client-email">${c.email}</div></div><div class="client-pts">${pts}pts</div></div>`;
+          }).join('');
+          document.getElementById('dash-clients-list').innerHTML=html;
+          document.getElementById('clients-list').innerHTML=html;
+        }
+      }
+    }
+    const{data:notifs}=await db.from('notifications').select('*').eq('commercant_id',currentUser.id);
+    document.getElementById('stat-notifs').textContent=notifs?notifs.length:0;
+    if(notifs&&notifs.length>0){
+      document.getElementById('notifs-history').innerHTML=notifs.reverse().map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">📣 ${currentProfile.nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');
+    }
+  }catch(e){console.log(e);}
+}
+
 async function sendNotification(){
-const text=document.getElementById('notif-text').value;
-const msg=document.getElementById('notif-send-msg');
-if(!text){showMsg(msg,'Écris un message','error');return;}
-await db.from('notifications').insert({commercant_id:currentUser.id,commercant_nom:currentProfile.nom,message:text});
-document.getElementById('notif-text').value='';
-showMsg(msg,'✅ Notification envoyée !','success');await loadStats();}
+  const text=document.getElementById('notif-text').value;
+  const msg=document.getElementById('notif-send-msg');
+  if(!text){showMsg(msg,'Écris un message','error');return;}
+  await db.from('notifications').insert({commercant_id:currentUser.id,commercant_nom:currentProfile.nom,message:text});
+  document.getElementById('notif-text').value='';
+  showMsg(msg,'✅ Notification envoyée !','success');
+  await loadStats();
+}
+
 async function showClientDashboard(){
-showPage('page-accueil-client');document.getElementById('nav-client').style.display='flex';
-document.getElementById('client-card-name').textContent=currentProfile.nom;
-document.getElementById('qr-client-name').textContent=currentProfile.nom;
-document.getElementById('profil-client-name').textContent=currentProfile.nom;
-document.getElementById('profil-client-email').textContent=currentProfile.email;
-generateQR();
-try{const{data:points}=await db.from('points').select('*').eq('client_id',currentUser.id);
-const total=points?points.reduce((s,p)=>s+p.points,0):0;
-document.getElementById('client-card-pts').textContent=total;
-document.getElementById('qr-pts').textContent=total;
-const{data:notifs}=await db.from('notifications').select('*').order('created_at',{ascending:false}).limit(20);
-if(notifs&&notifs.length>0){document.getElementById('client-notifs-list').innerHTML=notifs.map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">🏪 ${n.commercant_nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');}}
-catch(e){console.log(e);}}
-function generateQR(){const grid=document.getElementById('qr-grid');if(!grid)return;grid.innerHTML='';
-const seed=currentUser?currentUser.id.charCodeAt(0):42;
-for(let i=0;i<81;i++){const cell=document.createElement('div');
-cell.style.cssText=`aspect-ratio:1;border-radius:1px;background:${((seed*(i+1)*7)%3)>0?'#0D0D0D':'#F5F0E8'}`;
-grid.appendChild(cell);}}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+  showPage('page-accueil-client');
+  document.getElementById('nav-client').style.display='flex';
+  document.getElementById('client-card-name').textContent=currentProfile.nom;
+  document.getElementById('qr-client-name').textContent=currentProfile.nom;
+  document.getElementById('profil-client-name').textContent=currentProfile.nom;
+  document.getElementById('profil-client-email').textContent=currentProfile.email;
+  generateQR();
+  try{
+    const{data:points}=await db.from('points').select('*').eq('client_id',currentUser.id);
+    const total=points?points.reduce((s,p)=>s+p.points,0):0;
+    document.getElementById('client-card-pts').textContent=total;
+    document.getElementById('qr-pts').textContent=total;
+    const{data:notifs}=await db.from('notifications').select('*').order('created_at',{ascending:false}).limit(20);
+    if(notifs&&notifs.length>0){
+      document.getElementById('client-notifs-list').innerHTML=notifs.map(n=>`<div class="notif-item"><div style="font-size:10px;color:var(--gold);">🏪 ${n.commercant_nom}</div><div class="notif-msg">${n.message}</div><div class="notif-time">${new Date(n.created_at).toLocaleDateString('fr-FR')}</div></div>`).join('');
+    }
+  }catch(e){console.log(e);}
+}
+
+function generateQR(){
+  const grid=document.getElementById('qr-grid');
+  if(!grid)return;grid.innerHTML='';
+  const seed=currentUser?currentUser.id.charCodeAt(0):42;
+  for(let i=0;i<81;i++){
+    const cell=document.createElement('div');
+    cell.style.cssText=`aspect-ratio:1;border-radius:1px;background:${((seed*(i+1)*7)%3)>0?'#0D0D0D':'#F5F0E8'}`;
+    grid.appendChild(cell);
+  }
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
 function showTab(tab){
-const map={dashboard:'page-dashboard',clients:'page-clients',notifications:'page-notifications','profil-c':'page-profil-c','accueil-client':'page-accueil-client',qrcode:'page-qrcode','mes-notifs':'page-mes-notifs','profil-client':'page-profil-client'};
-showPage(map[tab]);
-const navId=currentRole==='commercant'?'nav-commercant':'nav-client';
-const tabs=currentRole==='commercant'?['dashboard','clients','notifications','profil-c']:['accueil-client','qrcode','mes-notifs','profil-client'];
-document.getElementById(navId).querySelectorAll('.nav-btn').forEach((btn,i)=>btn.classList.toggle('active',tabs[i]===tab));
-if(['dashboard','clients','notifications'].includes(tab))loadStats();
-if(['accueil-client','mes-notifs'].includes(tab))showClientDashboard();}
-function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>el.innerHTML='',5000);}
+  const map={dashboard:'page-dashboard',clients:'page-clients',notifications:'page-notifications','profil-c':'page-profil-c','accueil-client':'page-accueil-client',qrcode:'page-qrcode','mes-notifs':'page-mes-notifs','profil-client':'page-profil-client'};
+  showPage(map[tab]);
+  const navId=currentRole==='commercant'?'nav-commercant':'nav-client';
+  const tabs=currentRole==='commercant'?['dashboard','clients','notifications','profil-c']:['accueil-client','qrcode','mes-notifs','profil-client'];
+  document.getElementById(navId).querySelectorAll('.nav-btn').forEach((btn,i)=>btn.classList.toggle('active',tabs[i]===tab));
+  if(['dashboard','clients','notifications'].includes(tab))loadStats();
+  if(['accueil-client','mes-notifs'].includes(tab))showClientDashboard();
+}
+
+function showMsg(el,text,type){
+  if(!el)return;
+  el.innerHTML=`<div class="msg ${type}">${text}</div>`;
+  setTimeout(()=>el.innerHTML='',5000);
+}
 </script>
 </body>
 </html>
