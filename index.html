@@ -165,39 +165,31 @@ const{createClient}=supabase;
 const db=createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,currentRole=null,currentProfile=null;
 
-window.onload=async()=>{
-  setTimeout(async()=>{
-    document.getElementById('loading').style.display='none';
-    try{
-      const{data:{session}}=await db.auth.getSession();
-      console.log('Session:', session);
-      if(session && session.user){
-        currentUser=session.user;
-        console.log('User found:', currentUser.id);
-        await loadUserProfile();
-      } else {
-        console.log('No session found');
-        showPage('page-auth');
-      }
-    }catch(e){
-      console.log('Error:', e);
-      showPage('page-auth');
+async function init(){
+  document.getElementById('loading').style.display='none';
+  try{
+    const{data:{session}}=await db.auth.getSession();
+    if(session){
+      currentUser=session.user;
+      await loadUserProfile();
     }
-  },1500);
-};
+  }catch(e){console.log(e);}
+}
 
-db.auth.onAuthStateChange(async(event, session)=>{
-  console.log('Auth event:', event, session);
-  if(event==='SIGNED_IN' && session){
+db.auth.onAuthStateChange(async(event,session)=>{
+  if(event==='SIGNED_IN' && session && !currentProfile){
     currentUser=session.user;
     await loadUserProfile();
-  } else if(event==='SIGNED_OUT'){
+  }
+  if(event==='SIGNED_OUT'){
     currentUser=null;currentRole=null;currentProfile=null;
     showPage('page-auth');
     document.getElementById('nav-commercant').style.display='none';
     document.getElementById('nav-client').style.display='none';
   }
 });
+
+window.addEventListener('load',()=>setTimeout(init,1000));
 
 function switchAuthTab(tab){
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
@@ -207,13 +199,13 @@ function switchAuthTab(tab){
 function toggleRestoField(){document.getElementById('register-extra').style.display=document.getElementById('register-role').value==='commercant'?'block':'none';}
 
 async function login(){
-  const email=document.getElementById('login-email').value;
+  const email=document.getElementById('login-email').value.trim();
   const password=document.getElementById('login-password').value;
   const msg=document.getElementById('login-msg');
   if(!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
+  showMsg(msg,'Connexion...','success');
   try{
     const{data,error}=await db.auth.signInWithPassword({email,password});
-    console.log('Login result:', data, error);
     if(error){showMsg(msg,'Email ou mot de passe incorrect','error');return;}
     currentUser=data.user;
     await loadUserProfile();
@@ -222,18 +214,19 @@ async function login(){
 
 async function register(){
   const role=document.getElementById('register-role').value;
-  const name=document.getElementById('register-name').value;
-  const email=document.getElementById('register-email').value;
+  const name=document.getElementById('register-name').value.trim();
+  const email=document.getElementById('register-email').value.trim();
   const password=document.getElementById('register-password').value;
   const msg=document.getElementById('register-msg');
   if(!name||!email||!password){showMsg(msg,'Remplis tous les champs','error');return;}
+  showMsg(msg,'Création du compte...','success');
   try{
     const{data,error}=await db.auth.signUp({email,password});
     if(error){showMsg(msg,'Erreur: '+error.message,'error');return;}
     if(!data.user){showMsg(msg,'Vérifie ton email','success');return;}
     currentUser=data.user;
     if(role==='commercant'){
-      const restoName=document.getElementById('register-resto').value||name;
+      const restoName=document.getElementById('register-resto').value.trim()||name;
       await db.from('commercants').insert({id:currentUser.id,email,nom:restoName,notifications_envoyees:0});
     }else{
       await db.from('clients').insert({id:currentUser.id,email,nom:name,points_total:0});
@@ -243,31 +236,20 @@ async function register(){
 }
 
 async function loadUserProfile(){
-  console.log('Loading profile for:', currentUser.id);
   try{
-    const{data:commercant,error:e1}=await db.from('commercants').select('*').eq('id',currentUser.id).single();
-    console.log('Commercant:', commercant, e1);
+    const{data:commercant}=await db.from('commercants').select('*').eq('id',currentUser.id).single();
     if(commercant){currentRole='commercant';currentProfile=commercant;showCommerçantDashboard();return;}
-    const{data:client,error:e2}=await db.from('clients').select('*').eq('id',currentUser.id).single();
-    console.log('Client:', client, e2);
-    if(client){currentRole='client';currentProfile=client;showClientDashboard();}
-    else{
-      showMsg(document.getElementById('login-msg'),'Profil introuvable','error');
-      showPage('page-auth');
-    }
-  }catch(e){console.log('Profile error:',e);}
+    const{data:client}=await db.from('clients').select('*').eq('id',currentUser.id).single();
+    if(client){currentRole='client';currentProfile=client;showClientDashboard();return;}
+    showMsg(document.getElementById('login-msg'),'Profil introuvable. Contactez le support.','error');
+  }catch(e){console.log(e);}
 }
 
 async function logout(){
   await db.auth.signOut();
-  currentUser=null;currentRole=null;currentProfile=null;
-  showPage('page-auth');
-  document.getElementById('nav-commercant').style.display='none';
-  document.getElementById('nav-client').style.display='none';
 }
 
 async function showCommerçantDashboard(){
-  console.log('Showing dashboard for:', currentProfile.nom);
   showPage('page-dashboard');
   document.getElementById('nav-commercant').style.display='flex';
   document.getElementById('dash-resto-name').textContent=currentProfile.nom;
@@ -363,7 +345,7 @@ function showTab(tab){
 function showMsg(el,text,type){
   if(!el)return;
   el.innerHTML=`<div class="msg ${type}">${text}</div>`;
-  setTimeout(()=>el.innerHTML='',5000);
+  setTimeout(()=>{if(el)el.innerHTML='';},5000);
 }
 </script>
 </body>
